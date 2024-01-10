@@ -1,0 +1,45 @@
+﻿@using System.Globalization
+@using CW_ALM.Client.Common
+@inject ILocalStorageService _localStorage
+@inject NavigationManager _navigationManager
+
+<InputSelect 
+    ValueChanged="@((string value) => OnCultureChanged(value))" 
+    ValueExpression="@(() => CurrentCulture)" 
+    Value="CurrentCulture" 
+    class="form-control form-control form-control-sm">
+    @if (LstLanguages.Any())
+    {
+        <option value="">select...</option>
+        @foreach (var language in LstLanguages.OrderBy(a => a.Item1))
+        {
+            <option value="@language.Item2">
+                @language.Item1
+            </option>
+        }
+    } else
+    {
+        <option value="">Nenhum idioma foi encontrado!</option>
+    }
+
+</InputSelect>
+ 
+@code {
+    private string CurrentCulture { get; set; }
+
+    public (string, string)[] LstLanguages { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        CurrentCulture = CultureInfo.CurrentCulture.Name;
+        LstLanguages = LocalizerSettings.SupportedCulturesWithName;
+
+        await base.OnInitializedAsync();
+    }
+ 
+    public void OnCultureChanged(string culture)
+    {
+        _localStorage.SetItem<string>("culture", culture);
+        _navigationManager.NavigateTo(_navigationManager.Uri, forceLoad: true);
+    }
+}

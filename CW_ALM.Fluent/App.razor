@@ -1,0 +1,28 @@
+﻿@using Microsoft.AspNetCore.Components.Authorization
+@inject IStringLocalizer<SharedResource_UI> Localizer
+
+<FluentDesignTheme 
+    OfficeColor="OfficeColor.Office"
+    StorageName="theme" />
+
+<CascadingAuthenticationState>
+    <Router AppAssembly="@typeof(App).Assembly">
+        <Found Context="routeData">
+            <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)">
+                <NotAuthorized>
+                    <NotAuthorizedAcess WithLogin="true" />
+                </NotAuthorized>
+                <Authorizing>
+                    <div>@Localizer["Resx_UI_Autorizando"]...</div>
+                </Authorizing>
+            </AuthorizeRouteView>
+            <FocusOnNavigate RouteData="@routeData" Selector="h1" />
+        </Found>
+        <NotFound>
+            <PageTitle>@Localizer["Resx_UI_PaginaNaoEncontrada"]</PageTitle>
+            <LayoutView Layout="@typeof(MainLayout)">
+                <p role="alert">@Localizer["Resx_UI_NenhumaPaginaNesseEndereco"]</p>
+            </LayoutView>
+        </NotFound>
+    </Router>
+</CascadingAuthenticationState>

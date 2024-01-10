@@ -1,0 +1,15 @@
+﻿@inject IStringLocalizer<SharedResource_UI> Localizer
+
+<FluentStack Orientation="Orientation.Vertical" HorizontalAlignment="HorizontalAlignment.Center">
+    <FluentIcon Value="@(new Icons.Regular.Size48.EmojiHand())" />
+    <FluentLabel Typo="Typography.H3" Color="Color.Accent">@Localizer["Resx_UI_AcessoNegado"]</FluentLabel>
+    @if (WithLogin)
+    {
+        <h5><NavLink href="login">@Localizer["Resx_UI_Entrar"]</NavLink></h5>
+    }
+</FluentStack>
+
+@code{
+    [Parameter]
+    public bool WithLogin { get; set; } = false;
+}

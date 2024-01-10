@@ -1,0 +1,71 @@
+﻿@implements IDialogContentComponent<UsuarioVM>
+@attribute [Authorize(Roles = "Admin")]
+
+@* Header *@
+<FluentDialogHeader ShowDismiss="true">
+    <FluentStack VerticalAlignment="VerticalAlignment.Center">
+        <FluentIcon Value="@(new Icons.Regular.Size24.BookInformation())" />
+        <FluentLabel Typo="Typography.PaneHeader">
+            @Dialog.Instance.Parameters.Title
+        </FluentLabel>
+    </FluentStack>
+</FluentDialogHeader>
+
+@* Footer *@
+<FluentDialogFooter>
+    <FluentButton Appearance="Appearance.Accent" OnClick="@CloseAsync">@Localizer["Resx_UI_Fechar"]</FluentButton>
+</FluentDialogFooter>
+
+@* Body *@
+<FluentDialogBody>
+    @if (loading)
+{
+    <div style="width: 300px;display: grid; grid-gap: 12px; grid-auto-flow: column;">
+        <FluentProgressRing></FluentProgressRing>
+    </div>
+}
+    <FluentTabs Orientation="Orientation.Vertical" ActiveTabId="tab-v1" Width="500px">
+        <div slot="end">
+            &nbsp;
+        </div>
+        <FluentTab Label="@Localizer["Resx_UI_DetalhesUsuario"]" Id="tab-v1">
+            <FluentStack Orientation="Orientation.Vertical">
+                @* <div style="height: 500px; width: 100%"> *@
+                    <FluentStack Orientation="Orientation.Horizontal" HorizontalAlignment="HorizontalAlignment.Right">
+                        <div style="width: 49%">
+                            <FluentTextField style="width: 100%;" @bind-Value="@Content.UsuarioAD" ReadOnly=true>@Localizer["Resx_UI_UsuarioAD"]</FluentTextField>
+                        </div>
+                        <div style="width: 49%">
+                            <FluentTextField style="width: 100%;" @bind-Value="@Content.Nome" ReadOnly=true>@Localizer["Resx_UI_Nome"]</FluentTextField>
+                        </div>
+                    </FluentStack>
+                    <FluentStack Orientation="Orientation.Horizontal" HorizontalAlignment="HorizontalAlignment.Right">
+                        <div style="width: 100%">
+                            <FluentTextField style="width: 100%;" @bind-Value="@Content.Email" ReadOnly=true>@Localizer["Resx_UI_Email"]</FluentTextField>
+                        </div>
+                    </FluentStack>
+                    <FluentStack Orientation="Orientation.Vertical" HorizontalAlignment="HorizontalAlignment.Left">
+                        <div style="width: 100%; height: 130px;">
+                            <FluentSelect 
+                                Width="100%"
+                                Height="100px"
+                                Label="@Localizer["Resx_UI_Grupos"]"
+                                Items=@lstGrupos
+                                TOption="Option<string>"
+                                Multiple=true
+                                OptionText="@(i => i.Text)"
+                                OptionValue="@(i => i.Value)"
+                                OptionSelected="@(i => i.Selected)"
+                                @bind-SelectedOptions=@selectedGrupos />
+                        </div>
+                    </FluentStack>
+                @* </div> *@
+            </FluentStack>
+        </FluentTab>
+        <FluentTab Label="@Localizer["Resx_UI_TestesAssociados"]" Id="tab-v2">
+            @* <div style="height: 500px; width: 100%"> *@
+                Tab two content. This is for testing
+            @* </div> *@
+        </FluentTab>
+    </FluentTabs>
+</FluentDialogBody>

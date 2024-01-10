@@ -1,0 +1,81 @@
+﻿@implements IDialogContentComponent<UsuarioVM>
+@attribute [Authorize(Roles = "Admin")]
+
+@* Header *@
+<FluentDialogHeader ShowDismiss="true">
+    <FluentStack VerticalAlignment="VerticalAlignment.Center">
+        <FluentIcon Value="@(new Icons.Regular.Size24.AddSquareMultiple())" />
+        <FluentLabel Typo="Typography.PaneHeader">
+            @Dialog.Instance.Parameters.Title
+        </FluentLabel>
+    </FluentStack>
+</FluentDialogHeader>
+
+@* Footer *@
+<FluentDialogFooter Visible="false">
+
+</FluentDialogFooter>
+
+@* Body *@
+
+<FluentDialogBody>
+    <AuthorizeView Roles="Admin" Context="AuthViewContext">
+        <Authorized>
+            @if (loading)
+            {
+                <div style="width: 300px;display: grid; grid-gap: 12px; grid-auto-flow: column;">
+                    <FluentProgressRing></FluentProgressRing>
+                </div>
+            }
+            <EditForm EditContext="editContext" OnSubmit="SaveAsync">
+                <FluentStack Orientation="Orientation.Vertical">
+                    <ServerValidator @ref="ServerValidator" />
+                    <FluentValidationMessage For="@(() => Content.GenericError)" />
+                    <FluentStack Orientation="Orientation.Horizontal" HorizontalAlignment="HorizontalAlignment.Right">
+                        <div style="width: 49%">
+                            <FluentTextField style="width: 100%;" @bind-Value="@Content.UsuarioAD" ReadOnly=true>@Localizer["Resx_UI_UsuarioAD"]</FluentTextField>
+                                <FluentValidationMessage For="@(() => Content.UsuarioAD)" />
+                            </div>
+                            <div style="width: 49%">
+                                <FluentTextField style="width: 100%;" @bind-Value="@Content.Nome">@Localizer["Resx_UI_Nome"]</FluentTextField>
+                                <FluentValidationMessage For="@(() => Content.Nome)" />
+                            </div>
+                    </FluentStack>
+                    <FluentStack Orientation="Orientation.Horizontal" HorizontalAlignment="HorizontalAlignment.Right">
+                        <div style="width: 49%">
+                            <FluentTextField style="width: 100%;" @bind-Value="@Content.Email">@Localizer["Resx_UI_Email"]</FluentTextField>
+                            <FluentValidationMessage For="@(() => Content.Email)" />
+                        </div>
+                        <div style="width: 49%">
+                            <FluentTextField style="width: 100%;" @bind-Value="@Content.Senha">@Localizer["Resx_UI_Senha"]</FluentTextField>
+                            <FluentValidationMessage For="@(() => Content.Senha)" />
+                        </div>
+                    </FluentStack>
+                    <FluentStack Orientation="Orientation.Vertical" HorizontalAlignment="HorizontalAlignment.Left">
+                        <div style="width: 100%; height: 130px;">
+                            <FluentSelect 
+                                Width="100%"
+                                Height="100px"
+                                              Label="@Localizer["Resx_UI_Grupos"]"
+                                Items=@lstGrupos
+                                TOption="Option<string>"
+                                Multiple=true
+                                OptionText="@(i => i.Text)"
+                                OptionValue="@(i => i.Value)"
+                                OptionSelected="@(i => i.Selected)"
+                                @bind-SelectedOptions=@selectedGrupos /> 
+                        </div>
+                        <FluentValidationMessage For="@(() => Content.LstGrupos)" />
+                    </FluentStack>
+                    <FluentStack Orientation="Orientation.Horizontal" HorizontalAlignment="HorizontalAlignment.Right">
+                        <FluentButton Appearance="Appearance.Accent" Type="ButtonType.Submit">@Localizer["Resx_UI_Salvar"]</FluentButton>
+                        <FluentButton Appearance="Appearance.Neutral" OnClick="@CancelAsync">@Localizer["Resx_UI_Cancelar"]</FluentButton>
+                    </FluentStack>
+                </FluentStack>
+            </EditForm>
+            </Authorized>
+            <NotAuthorized>
+                <NotAuthorizedAcess />
+            </NotAuthorized>
+        </AuthorizeView>
+    </FluentDialogBody>

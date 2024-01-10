@@ -1,0 +1,58 @@
+﻿@implements IDialogContentComponent<GrupoVM>
+
+@* Header *@
+<FluentDialogHeader ShowDismiss="true">
+    <FluentStack VerticalAlignment="VerticalAlignment.Center">
+        <FluentIcon Value="@(new Icons.Regular.Size24.BookInformation())" />
+        <FluentLabel Typo="Typography.PaneHeader">
+            @Dialog.Instance.Parameters.Title
+        </FluentLabel>
+    </FluentStack>
+</FluentDialogHeader>
+
+@* Footer *@
+<FluentDialogFooter>
+    <FluentButton Appearance="Appearance.Accent" OnClick="@CloseAsync">@Localizer["Resx_UI_Fechar"]</FluentButton>
+</FluentDialogFooter>
+
+@* Body *@
+<FluentDialogBody>
+    @if (loading)
+    {
+        <div style="width: 300px;display: grid; grid-gap: 12px; grid-auto-flow: column;">
+            <FluentProgressRing></FluentProgressRing>
+        </div>
+    }
+    <FluentTabs Orientation="Orientation.Vertical" ActiveTabId="tab-v1" Width="500px">
+        <div slot="end">
+            &nbsp;
+        </div>
+        <FluentTab Label="@Localizer["Resx_UI_DetalhesGrupo"]" Id="tab-v1">
+            <FluentStack Orientation="Orientation.Vertical">
+                <FluentStack Orientation="Orientation.Horizontal" HorizontalAlignment="HorizontalAlignment.Right">
+                    <div style="height: 300px; width: 100%">
+                        <FluentTextField style="width: 100%;" @bind-Value="@Content.Nome" ReadOnly=true>@Localizer["Resx_UI_Nome"]</FluentTextField>
+                    </div>
+                </FluentStack>
+            </FluentStack>
+        </FluentTab>
+            <FluentTab Label="@Localizer["Resx_UI_Usuarios"]" Id="tab-v2">
+            <FluentStack Orientation="Orientation.Vertical">
+                <FluentStack Orientation="Orientation.Horizontal" HorizontalAlignment="HorizontalAlignment.Right">
+                    <div style="height: 300px; overflow-y: scroll;">
+                        <FluentDataGrid Items="@lstGruposUsuarios" GenerateHeader="GenerateHeaderOption.Sticky">
+                            <ChildContent>
+                                <PropertyColumn Property="@(a => a.Usuario.UsuarioAD)" Title="@Localizer["Resx_UI_UsuarioAD"]" Sortable="true" InitialSortDirection="SortDirection.Ascending" IsDefaultSortColumn="true" />
+                                <PropertyColumn Property="@(a => a.Usuario.Nome)" Title="@Localizer["Resx_UI_Nome"]" Sortable="true" />
+                                <PropertyColumn Property="@(a => a.Usuario.Email)" Title="@Localizer["Resx_UI_Email"]" Sortable="true" />
+                            </ChildContent>
+                            <EmptyContent>
+                                <FluentDataGridEmptyContent />
+                            </EmptyContent>
+                        </FluentDataGrid>
+                    </div>
+                </FluentStack>
+            </FluentStack>
+        </FluentTab>
+    </FluentTabs>
+</FluentDialogBody>

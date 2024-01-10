@@ -1,0 +1,1 @@
+﻿Scaffold-DbContext "Server=.\\sqlserver2019;Database=CW_ALM;User Id=sa;Password=c01w02;MultipleActiveResultSets=true;Encrypt=false;" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models -f -Context DBContext -NoPluralize -NoOnConfiguring -UseDatabaseNames

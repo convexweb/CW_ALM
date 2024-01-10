@@ -1,0 +1,41 @@
+﻿@implements IDialogContentComponent<GrupoVM>
+@attribute [Authorize(Roles = "Admin")]
+
+<FluentDialogHeader Visible="false" />
+
+<FluentDialogBody Style="@height">
+    <AuthorizeView Roles="Admin" Context="AuthViewContext">
+        <Authorized>
+            <FluentStack Orientation="Orientation.Vertical" HorizontalAlignment="HorizontalAlignment.Center" >
+                <h3>
+                    @(Content.Status ? (!Confirma ? @Localizer["Resx_UI_ConfirmaDesativacao"] : @Localizer["Resx_UI_DesativandoOGrupo"]) : (!Confirma ? @Localizer["Resx_UI_ConfirmaReativacao"] : @Localizer["Resx_UI_ReativandoOGrupo"]))
+                </h3>
+                <p style="text-align:center">@((MarkupString)$"<b>{Content.Nome}</b>")</p>
+    
+                @if (Confirma)
+                {
+                    <div style="width: 340px;">
+                        <FluentProgress />
+                    </div>
+                    <h3>
+                        @Localizer["Resx_UI_Aguarde"]...
+                    </h3>
+                }
+            </FluentStack>
+        </Authorized>
+        <NotAuthorized>
+            <NotAuthorizedAcess />
+        </NotAuthorized>
+    </AuthorizeView>
+</FluentDialogBody>
+<FluentDialogFooter>
+    <AuthorizeView Roles="Admin" Context="AuthViewContext">
+        <Authorized>
+            <FluentButton Appearance="Appearance.Accent" OnClick="@AlteraStatusAsync" Disabled="@Confirma">@Localizer["Resx_UI_Sim"]</FluentButton>
+                <FluentButton Appearance="Appearance.Accent" OnClick="@CloseAsync" Disabled="@Confirma">@Localizer["Resx_UI_Nao"]</FluentButton>
+        </Authorized>
+        <NotAuthorized>
+                <FluentButton Appearance="Appearance.Accent" OnClick="@CloseAsync">@Localizer["Resx_UI_Fechar"]</FluentButton>
+        </NotAuthorized>
+    </AuthorizeView>
+</FluentDialogFooter>

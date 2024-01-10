@@ -1,0 +1,9 @@
+﻿@page "/logout"
+@inject IAuthStateProvider AuthServiceProvider
+
+@code {
+    protected override void OnInitialized()
+    {
+        AuthServiceProvider.Logout();
+    }
+}

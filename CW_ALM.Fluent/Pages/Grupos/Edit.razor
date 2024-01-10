@@ -1,0 +1,50 @@
+﻿@implements IDialogContentComponent<GrupoVM>
+
+@* Header *@
+<FluentDialogHeader ShowDismiss="true">
+    <FluentStack VerticalAlignment="VerticalAlignment.Center">
+        <FluentIcon Value="@(new Icons.Regular.Size24.AddSquareMultiple())" />
+        <FluentLabel Typo="Typography.PaneHeader">
+            @Dialog.Instance.Parameters.Title
+        </FluentLabel>
+    </FluentStack>
+</FluentDialogHeader>
+
+@* Footer *@
+<FluentDialogFooter Visible="false">
+
+</FluentDialogFooter>
+
+@* Body *@
+
+<FluentDialogBody>
+    <AuthorizeView Roles="Admin" Context="AuthViewContext">
+        <Authorized>
+            @if (loading)
+            {
+                <div style="width: 300px;display: grid; grid-gap: 12px; grid-auto-flow: column;">
+                    <FluentProgressRing></FluentProgressRing>
+                </div>
+            }
+            <EditForm EditContext="editContext" OnSubmit="SaveAsync">
+                <FluentStack Orientation="Orientation.Vertical">
+                    <ServerValidator @ref="ServerValidator" />
+                    <FluentValidationMessage For="@(() => Content.GenericError)" />
+                    <FluentStack Orientation="Orientation.Horizontal" HorizontalAlignment="HorizontalAlignment.Right">
+                        <div style="width: 100%">
+                            <FluentTextField style="width: 100%;" @bind-Value="@Content.Nome">@Localizer["Resx_UI_Nome"]</FluentTextField>
+                            <FluentValidationMessage For="@(() => Content.Nome)" />
+                        </div>
+                    </FluentStack>
+                    <FluentStack Orientation="Orientation.Horizontal" HorizontalAlignment="HorizontalAlignment.Right">
+                        <FluentButton Appearance="Appearance.Accent" Type="ButtonType.Submit">@Localizer["Resx_UI_Salvar"]</FluentButton>
+                        <FluentButton Appearance="Appearance.Neutral" OnClick="@CancelAsync">@Localizer["Resx_UI_Cancelar"]</FluentButton>
+                    </FluentStack>
+                </FluentStack>
+            </EditForm>
+            </Authorized>
+            <NotAuthorized>
+                <NotAuthorizedAcess />
+            </NotAuthorized>
+        </AuthorizeView>
+    </FluentDialogBody>

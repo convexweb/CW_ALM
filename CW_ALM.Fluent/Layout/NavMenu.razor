@@ -1,0 +1,19 @@
+﻿@inject IStringLocalizer<SharedResource_UI> Localizer
+
+<div class="navmenu">
+    <input type="checkbox" id="navmenu-toggle" />
+    <nav class="sitenav" aria-labelledby="main-menu" onclick="document.getElementById('navmenu-toggle').click();">
+        <FluentNavMenu Id="main-menu" Width="250" Collapsible="true" Title="@Localizer["Resx_UI_Menu"]" @bind-Expanded="expanded">
+            <FluentNavLink Href="/" Match="NavLinkMatch.All" Icon="@(new Icons.Regular.Size24.Home())" IconColor="Color.Accent">@Localizer["Resx_UI_MenuHome"]</FluentNavLink>
+            <FluentNavGroup Title="@Localizer["Resx_UI_MenuAdministracao"]" Icon="@(new Icons.Regular.Size24.SettingsCogMultiple())">
+                <FluentNavLink Href="/usuarios" Match="NavLinkMatch.All" Icon="@(new Icons.Regular.Size24.Person())">@Localizer["Resx_UI_MenuAdministracaoUsuarios"]</FluentNavLink>
+                <FluentNavLink Href="/grupos" Match="NavLinkMatch.All" Icon="@(new Icons.Regular.Size24.PeopleTeam())">@Localizer["Resx_UI_MenuAdministracaoGrupos"]</FluentNavLink>
+            </FluentNavGroup>
+            <FluentNavLink Href="/TesteRoles" Match="NavLinkMatch.All" Icon="@(new Icons.Regular.Size24.TaskListLtr())" IconColor="Color.Accent">@Localizer["Resx_UI_MenuTestes"]</FluentNavLink>
+            <FluentNavLink Href="logout" Icon="@(new Icons.Regular.Size24.PlugDisconnected())" IconColor="Color.Accent">@Localizer["Resx_UI_MenuSair"]</FluentNavLink>
+        </FluentNavMenu>
+    </nav>
+</div>
+@code {
+    private bool expanded = true;
+}

@@ -1,0 +1,42 @@
+﻿@using System.Globalization
+@using CW_ALM.Fluent.Common
+@inject ILocalStorageService _localStorage
+@inject NavigationManager _navigationManager
+@inject IStringLocalizer<SharedResource_UI> Localizer
+
+<FluentSelect ValueChanged="@(e => OnCultureChanged(e))" TOption="string">
+    @if (LstLanguages.Any())
+    {
+        @foreach (var language in LstLanguages.OrderBy(a => a.Item1))
+        {
+            <FluentOption value="@language.Item2" Selected="@(language.Item2.Trim().ToLower().Equals(CurrentCulture.Trim().ToLower()) ? true : false)">
+                @language.Item1
+            </FluentOption>
+        }
+    }
+    else
+    {
+        <option value="">@Localizer["Resx_UI_NenhumItemEncontrado"]</option>
+    }
+</FluentSelect>
+
+
+@code {
+    private string CurrentCulture { get; set; }
+
+    public (string, string)[] LstLanguages { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        CurrentCulture = CultureInfo.CurrentCulture.Name;
+        LstLanguages = LocalizerSettings.SupportedCulturesWithName;
+
+        await base.OnInitializedAsync();
+    }
+
+    public void OnCultureChanged(string culture)
+    {
+        _localStorage.SetItem<string>("culture", culture);
+        _navigationManager.NavigateTo(_navigationManager.Uri, forceLoad: true);
+    }
+}

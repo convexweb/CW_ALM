@@ -1,0 +1,48 @@
+﻿@page "/usuarios"
+@attribute [Authorize(Roles = "Admin")]
+
+<PageTitle>@Localizer["Resx_UI_Usuarios"]</PageTitle>
+
+<h1>@Localizer["Resx_UI_ListagemUsuarios"]</h1>
+
+<AuthorizeView Roles="Admin">
+    <FluentButton IconStart="@(new Icons.Regular.Size16.AddSquareMultiple())" OnClick="@OpenAddDialogAsync">
+        @Localizer["Resx_UI_Adicionar"]
+    </FluentButton>
+</AuthorizeView>
+
+
+@if (loading)
+{
+    <div style="width: 300px;display: grid; grid-gap: 12px; grid-auto-flow: column;">
+        <FluentProgressRing></FluentProgressRing>
+    </div>
+}
+@if (usuarios != null && usuarios.Any())
+{
+    <AuthorizeView Roles="Root" Context="AuthViewContext">
+        <Authorized>
+            <FluentDataGrid Items="@usuarios">
+                <TemplateColumn Title="@Localizer["Resx_UI_Opcoes"]">
+                    <FluentIcon Value="@(new Icons.Regular.Size20.BookInformation())" Title="@Localizer["Resx_UI_Detalhes"]" @onclick="@(() => OpenDetailsDialogAsync(context))" />
+                    <FluentIcon Value="@(new Icons.Regular.Size20.SlideTextEdit())" Title="@Localizer["Resx_UI_Editar"]" @onclick="@(() => OpenEditDialogAsync(context))" />
+                    @if (context.Status)
+                    {
+                        <FluentIcon Value="@(new Icons.Regular.Size20.CloudArrowDown())" Title="@Localizer["Resx_UI_Desativar"]" @onclick="@(() => OpenAtualizaStatusDialogAsync(context))" />
+                    }
+                    else
+                    {
+                        <FluentIcon Value="@(new Icons.Regular.Size20.CloudArrowUp())" Title="@Localizer["Resx_UI_Reativar"]" Color="Color.Neutral" @onclick="@(() => OpenAtualizaStatusDialogAsync(context))" />
+                    }
+                </TemplateColumn>
+
+                <PropertyColumn Property="@(a => a.UsuarioAD)" Title="@Localizer["Resx_UI_UsuarioAD"]" Sortable="true" InitialSortDirection="SortDirection.Ascending" IsDefaultSortColumn="true" />
+                <PropertyColumn Property="@(a => a.Nome)" Title="@Localizer["Resx_UI_Nome"]" Sortable="true" />
+                <PropertyColumn Property="@(a => a.Email)" Title="@Localizer["Resx_UI_Email"]" Sortable="true" />
+            </FluentDataGrid>
+        </Authorized>
+        <NotAuthorized>
+            <NotAuthorizedAcess />
+        </NotAuthorized>
+    </AuthorizeView>
+}

@@ -1,0 +1,73 @@
+﻿@page "/login"
+@inject IAuthStateProvider AuthServiceProvider
+@inject NavigationManager NavigationManager
+@inject IStringLocalizer<SharedResource_UI> Localizer
+@inject HttpClient HttpClient
+@inject ServerValidator ServerValidator
+@attribute [AllowAnonymous]
+
+<FluentGrid Spacing="3" Justify="@JustifyContent.Center">
+    <FluentGridItem xs="12" sm="4">
+        <EditForm EditContext="editContext" OnSubmit="HandleValidSubmit">
+            <FluentStack Orientation="Orientation.Vertical">
+                <FluentStack Orientation="Orientation.Vertical" HorizontalAlignment="HorizontalAlignment.Center">
+                    <FluentLabel Typo="Typography.H1"> <FluentIcon Value="@(new Icons.Filled.Size28.ShieldLock())" /> <FluentSpacer Width="15" /> @Localizer["Resx_UI_Entrar"] </FluentLabel>
+                </FluentStack>
+                <ServerValidator @ref="ServerValidator" />
+                <FluentValidationMessage For="@(() => LoginVM.GenericError)" />
+                @if (!string.IsNullOrEmpty(error))
+                {
+                    <div class="alert alert-danger mt-3 mb-0" style="width: 100%">@error</div>
+                }
+                <div style="width: 100%">
+                    <FluentTextField @bind-Value=LoginVM.Email style="width: 100%">@Localizer["Resx_UI_Email"]</FluentTextField>
+                    <FluentValidationMessage For="@(() => LoginVM.Email)" />
+                </div>
+                <div style="width: 100%">
+                    <FluentTextField TextFieldType="TextFieldType.Password" @bind-Value=LoginVM.Password style="width: 100%">@Localizer["Resx_UI_Senha"]</FluentTextField>
+                    <FluentValidationMessage For="@(() => LoginVM.Password)" />
+                </div>
+                <FluentStack Orientation="Orientation.Vertical" HorizontalAlignment="HorizontalAlignment.Right">
+                    <FluentButton Type="ButtonType.Submit" Appearance="Appearance.Accent" IconStart="@(new Icons.Regular.Size16.PlugConnected())">@Localizer["Resx_UI_Entrar"]</FluentButton>
+                </FluentStack>
+            </FluentStack>
+        </EditForm>
+    </FluentGridItem>
+</FluentGrid>
+
+@code {
+    private LoginVM LoginVM;
+    private EditContext editContext;
+    private bool loading;
+    private string error;
+
+    protected override void OnInitialized()
+    {
+        // redirect to home if already logged in
+        if (AuthServiceProvider.CurrentUser != null && !AuthServiceProvider.CurrentUser.UID.Equals(Guid.Empty))
+        {
+            NavigationManager.NavigateTo("");
+        }
+        LoginVM = new();
+        editContext = new EditContext(LoginVM);
+    }
+
+    private async void HandleValidSubmit()
+    {
+        loading = true;
+        editContext = new EditContext(LoginVM);
+        StateHasChanged();
+        try
+        {
+            var response = await AuthServiceProvider.LoginAsync(LoginVM.Email, LoginVM.Password);
+            ServerValidator.Validate(response, LoginVM);
+        }
+        catch (Exception ex)
+        {
+            error = ex.Message;
+            loading = false;
+            StateHasChanged();
+        }
+        loading = false;
+    }
+}

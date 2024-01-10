@@ -1,0 +1,15 @@
+﻿@page "/"
+@attribute [Authorize]
+@inject IUsuarioService UsuarioService
+@inject IStringLocalizer<SharedResource_UI> Localizer
+@inject IJsonSerializerExtension JsonSerializerExtension
+
+<PageTitle>@Localizer["Resx_UI_MenuHome"]</PageTitle>
+
+<FluentStack Orientation="Orientation.Vertical" HorizontalAlignment="HorizontalAlignment.Center">
+    <FluentIcon Value="@(new Icons.Regular.Size48.WindowApps())" Color="Color.Accent" />
+    @Localizer["Resx_UI_BemVindo"]
+</FluentStack>
+@code {
+    
+}

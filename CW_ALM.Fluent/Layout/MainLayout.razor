@@ -1,0 +1,41 @@
+﻿@inherits LayoutComponentBase
+@inject IAuthStateProvider AuthServiceProvider
+@inject NavigationManager NavigationManager
+@inject IStringLocalizer<SharedResource_UI> Localizer
+
+<FluentLayout >
+    <FluentHeader>
+        @* ConvexWeb - Acompanhamento de Testes de Software *@
+        @Localizer["Resx_UI_NomeSistema"]
+        <FluentSpacer />
+        @if (AuthServiceProvider.CurrentUser != null)
+        {
+            <div class="top-row px-4 auth">
+                <SelectCulture />
+            </div>
+        }
+    </FluentHeader>
+    <FluentStack Class="main" Orientation="Orientation.Horizontal" Width="100%">
+        @if (AuthServiceProvider.CurrentUser != null)
+        {
+            <div class="sidebar">
+                <NavMenu />
+            </div>
+        }
+        <FluentBodyContent>
+            <ErrorBoundary>
+                <ChildContent>
+                    <div class="content">
+                        @Body
+                    </div>
+                </ChildContent>
+                <ErrorContent Context="ex">
+                    <div class="blazor-error-boundary">@ex.Message</div>
+                </ErrorContent>
+            </ErrorBoundary>
+        </FluentBodyContent>
+    </FluentStack>
+</FluentLayout>
+
+<FluentDialogProvider />
+<FluentToastProvider MaxToastCount="5" />
